@@ -18,7 +18,7 @@ pipeline {
       }
       stage('Build Docker Image') {
         steps{
-          if( env.GIT_BRANCH == 'staging' ){
+          if ( env.GIT_BRANCH == 'staging' ){
             sh "docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_staging_${BUILD_NUMBER}."
             sh "docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_staging_${BUILD_NUMBER}"
             echo "Docker Image Build For Server Stagging Success"
@@ -32,7 +32,7 @@ pipeline {
       }
       stage('Docker Image Delete'){
         steps{
-          if( env.GIT_BRANCH == 'staging' ){
+          if ( env.GIT_BRANCH == 'staging' ){
             sh "docker image rm -f $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_staging_${BUILD_NUMBER}"
             echo "Docker Image Delete For Server Stagging Success"
           }
@@ -44,7 +44,7 @@ pipeline {
       }
       stage('Deploy TO K8S'){
         steps{
-          if( env.GIT_BRANCH == 'staging' ){
+          if ( env.GIT_BRANCH == 'staging' ){
             sh 'sed -i "s/versi/$BUILD_NUMBER/g" "${DOCKER_IMAGE_APPS}"-staging-deploy.yaml'
             sh 'wget https://raw.githubusercontent.com/ikhsannugs/big-project/master/landpage-staging-deploy.yaml'
             sh 'kubectl apply -f ${DOCKER_IMAGE_APPS}"-staging-deploy.yaml'
