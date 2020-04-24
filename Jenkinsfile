@@ -20,12 +20,12 @@ pipeline {
         steps{
           script {
             if ( env.GIT_BRANCH == 'staging' ){
-              sh "docker image build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_staging_${BUILD_NUMBER}."
+              sh "docker image build . -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_staging_${BUILD_NUMBER}"
               sh "docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_staging_${BUILD_NUMBER}"
               echo "Docker Image Build For Server Stagging Success"
             }  
             else if ( env.GIT_BRANCH == 'master' ){
-              sh "docker image build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_production_${BUILD_NUMBER}."
+              sh "docker image build . -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_production_${BUILD_NUMBER}"
               sh "docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_production_${BUILD_NUMBER}"
               echo "Docker Image Build For Server Production Success"
             }
