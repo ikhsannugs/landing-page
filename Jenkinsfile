@@ -51,13 +51,13 @@ pipeline {
           script {
             if ( env.GIT_BRANCH == 'staging' ){
               sh 'sed -i "s/versi/$BUILD_NUMBER/g" "${DOCKER_IMAGE_APPS}"-staging-deploy.yaml'
-              sh 'wget https://raw.githubusercontent.com/ikhsannugs/big-project/master/landpage-staging-deploy.yaml'
+              sh "wget https://raw.githubusercontent.com/ikhsannugs/big-project/master/landpage-staging-deploy.yaml"
               sh 'kubectl apply -f ${DOCKER_IMAGE_APPS}"-staging-deploy.yaml'
               echo "Deploy To Server Staging Success"
             }
             else if ( env.GIT_BRANCH == 'master' ){
               sh 'sed -i "s/versi/$BUILD_NUMBER/g" "${DOCKER_IMAGE_APPS}"-production-deploy.yaml'
-              sh 'wget https://raw.githubusercontent.com/ikhsannugs/big-project/master/landpage-production-deploy.yaml'
+              sh "wget https://raw.githubusercontent.com/ikhsannugs/big-project/master/landpage-production-deploy.yaml"
               sh 'kubectl apply -f "${DOCKER_IMAGE_APPS}"-production-deploy.yaml'
               echo "Deploy To Server Staging Success"
             }
