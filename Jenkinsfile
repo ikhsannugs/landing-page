@@ -69,8 +69,18 @@ pipeline {
     }
   post {
         always {
-            echo "DEPLOY KE ${BUILD_NUMBER} ${currentBuild.currentResult}"
-            slackSend message: "DEPLOY KE ${BUILD_NUMBER} ${currentBuild.currentResult}"
+          script {
+            if ( env.GIT_BRANCH == 'staging' ){
+              echo "DEPLOY NUMBER ${BUILD_NUMBER} TO SERVER STAGING ${currentBuild.currentResult}"
+              slackSend message: "DEPLOY NUMBER ${BUILD_NUMBER} TO SERVER STAGING ${currentBuild.currentResult}"
+
+            }
+            else if ( env.GIT_BRANCH == 'master' ){
+              echo "DEPLOY NUMBER ${BUILD_NUMBER} TO SERVER STAGING ${currentBuild.currentResult}"
+              slackSend message: "DEPLOY NUMBER ${BUILD_NUMBER} TO SERVER PRODUCTION ${currentBuild.currentResult}"
+            }
+          }  
         }
   }  
 }
+
