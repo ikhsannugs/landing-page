@@ -22,12 +22,12 @@ pipeline {
             if ( env.GIT_BRANCH == 'staging' ){
               sh "docker image build . -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_staging_${BUILD_NUMBER}"
               sh "docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_staging_${BUILD_NUMBER}"
-              echo "Docker Image Build For Server Stagging Success"
+              echo "Docker Image ${BUILD_NUMBER} Build For Server Stagging ${currentBuild.currentResult}"
             }  
             else if ( env.GIT_BRANCH == 'master' ){
               sh "docker image build . -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_production_${BUILD_NUMBER}"
               sh "docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_production_${BUILD_NUMBER}"
-              echo "Docker Image Build For Server Production Success"
+              echo "Docker Image ${BUILD_NUMBER} Build For Server Production ${currentBuild.currentResult}"
             }
           }  
         }
@@ -37,11 +37,11 @@ pipeline {
           script {
             if ( env.GIT_BRANCH == 'staging' ){
               sh "docker image rm -f $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_staging_${BUILD_NUMBER}"
-              echo "Docker Image Delete For Server Stagging Success"
+              echo "Docker Image ${BUILD_NUMBER} Delete For Server Stagging ${currentBuild.currentResult}"
             }
             else if ( env.GIT_BRANCH == 'master' ){
               sh "docker image rm -f $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:${DOCKER_IMAGE_APPS}_production_${BUILD_NUMBER}"
-              echo "Docker Image Delete For Server Production Success"
+              echo "Docker Image ${BUILD_NUMBER} Delete For Server Production ${currentBuild.currentResult}"
             }
           }  
         }
@@ -54,17 +54,23 @@ pipeline {
               sh 'sed -i "s/versi/$BUILD_NUMBER/g" "${DOCKER_IMAGE_APPS}"-staging-deploy.yaml'
               sh 'kubectl apply -f "${DOCKER_IMAGE_APPS}"-staging-deploy.yaml'
               sh 'rm -rf *'
-              echo "Deploy To Server Staging Success"
+              echo "Deploy ${BUILD_NUMBER} To Server Staging ${currentBuild.currentResult}"
             }
             else if ( env.GIT_BRANCH == 'master' ){
               sh 'wget https://raw.githubusercontent.com/ikhsannugs/big-project/master/landpage-production-deploy.yaml'
               sh 'sed -i "s/versi/$BUILD_NUMBER/g" "${DOCKER_IMAGE_APPS}"-production-deploy.yaml'
               sh 'kubectl apply -f "${DOCKER_IMAGE_APPS}"-production-deploy.yaml'
               sh 'rm -rf *'
-              echo "Deploy To Server Staging Success"
+              echo "Deploy ${BUILD_NUMBER} To Server Production ${currentBuild.currentResult}"
             }
           }  
         }
       }
     }
+  post {
+        always {
+            echo "DEPLOY KE ${BUILD_NUMBER} ${currentBuild.currentResult}"
+            slackSend message: "DEPLOY KE ${BUILD_NUMBER} ${currentBuild.currentResult}"
+        }
+  }  
 }
