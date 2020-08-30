@@ -23,8 +23,8 @@ pipeline {
       }
       stage('Publish Docker Image') {
         steps {
-          sh "docker push ${DOCKER_REPO}/nodejs-backend:${BRANCH_NAME}-${BUILD_NUMBER}"
-          sh "docker image rm -f ${DOCKER_REPO}/nodejs-backend:${BRANCH_NAME}-${BUILD_NUMBER}"
+          sh "docker push ${DOCKER_REPO}/webapps:${BRANCH_NAME}-${BUILD_NUMBER}"
+          sh "docker image rm -f ${DOCKER_REPO}/webapps:${BRANCH_NAME}-${BUILD_NUMBER}"
         }
       }
       stage('Deploy to Kubernetes') {
